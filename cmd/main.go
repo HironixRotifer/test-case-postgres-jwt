@@ -1,19 +1,23 @@
 package main
 
 import (
-	"github.com/HironixRotifer/test-case-postgres-jwt/internal/handlers"
-	// "github.com/HironixRotifer/test-case-postgres-jwt/internal/lib/middleware"
+	"github.com/HironixRotifer/test-case-postgres-jwt/internal/config"
+	httpserve "github.com/HironixRotifer/test-case-postgres-jwt/internal/http"
+	"github.com/HironixRotifer/test-case-postgres-jwt/internal/storage/postgres"
 
-	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
-	router := gin.Default()
-	// router.Use(middleware.Authenticate())
-	router.Handle("POST", "api-v1/gettokens", handlers.GetTokensByID())
-	router.Handle("GET", "api-v1/gettokens", handlers.RefreshTokensByID())
+	cfg := config.MustLoadPath(".env")
+	db, err := postgres.New(cfg)
+	if err != nil {
+		log.Err(err).Msg("error start database")
+	}
 
-	// routes(router)
+	_, err = db.GetUserByID(1)
+	log.Info().Msgf("%v", err)
 
-	router.Run()
+	server := httpserve.NewServe(db)
+	server.Start(cfg.Host, httpserve.WithPort(cfg.Port))
 }
