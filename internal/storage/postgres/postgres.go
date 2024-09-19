@@ -8,7 +8,11 @@ import (
 
 	"github.com/HironixRotifer/test-case-postgres-jwt/internal/config"
 	"github.com/HironixRotifer/test-case-postgres-jwt/internal/models"
+
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
+	"github.com/rs/zerolog/log"
 )
 
 type Storage struct {
@@ -19,7 +23,7 @@ type Storage struct {
 func New(config *config.Config) (*Storage, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%v user=%s password=%s  dbname=%s sslmode=%s",
-		config.Host, config.DBPort, config.User, config.Password, config.DBName, config.SSLMode,
+		config.DBHost, config.DBPort, config.User, config.Password, config.DBName, config.SSLMode,
 	)
 
 	db, err := sql.Open("postgres", dsn)
@@ -30,6 +34,8 @@ func New(config *config.Config) (*Storage, error) {
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
+
+	log.Info().Msg("database connection is success")
 
 	return &Storage{db}, nil
 }

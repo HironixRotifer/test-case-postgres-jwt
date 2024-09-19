@@ -8,12 +8,15 @@ import (
 
 type Config struct {
 	Host     string `env:"HOST"`
-	Port     int    `env:"PORT"`    // Порт http сервера
+	Port     int    `env:"PORT"` // Порт http сервера
+	DBHost   string `env:"DB_HOST"`
 	DBPort   string `env:"DB_PORT"` // Порт базы данных
 	Password string `env:"DB_PASSWORD"`
 	User     string `env:"DB_USER"`
 	DBName   string `env:"DB_NAME"`
 	SSLMode  string `env:"DB_SSLMODE"`
+
+	MigrationsTable string `env:"DB_MIGRATIONTABLE"`
 }
 
 func MustLoadPath(configPath string) *Config {

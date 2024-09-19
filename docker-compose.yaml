@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    restart: always
+    image: postgres:latest
+    ports:
+     - "5431:5432"
+    volumes:
+     - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+     - POSTGRES_DB=rotifer
+     - POSTGRES_USER=rotifer
+     - POSTGRES_PASSWORD=rotifer
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+     - HOST=localhost
+     - PORT
+
+     - DB_HOST=db
+     - DB_PORT=5432
+     - DB_USER=rotifer
+     - DB_PASSWORD=rotifer
+     - DB_NAME=rotifer
+     - DB_SSLMODE=disable
+    depends_on:
+     - db
+    #  - migrator
+
+  migrator:
+    build: .
+    environment:
+     - DB_HOST=db
+     - DB_PORT=5432
+     - DB_USER=rotifer
+     - DB_PASSWORD=rotifer
+     - DB_SSLMODE=disable
+     - DB_NAME=rotifer
+     - DB_MIGRATIONTABLE=rotifer
+    depends_on:
+     - db
