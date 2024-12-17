@@ -7,8 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Authenticate проверяет ip адресс пользователя
-func Authenticate() gin.HandlerFunc {
+func AuthenticateByIP() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		clientToken := c.Request.Header.Get("token")
 		if clientToken == "" {
@@ -29,7 +28,11 @@ func Authenticate() gin.HandlerFunc {
 		}
 
 		if claims.IP != c.ClientIP() {
-			// TODO: send email message
+			sendEmailNotification()
 		}
 	}
+}
+
+func sendEmailNotification() {
+	// TODO:
 }

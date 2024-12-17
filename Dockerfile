@@ -24,9 +24,9 @@ COPY ["./go.mod", "./go.sum", "./"]
 RUN  go mod download
 
 COPY . ./
-RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o . ./cmd/app
-RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o . ./cmd/migrator
 RUN chmod +x wait-for-postgres.sh
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o . ./cmd/migrator
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o . ./cmd/app
 
 EXPOSE 8080
 

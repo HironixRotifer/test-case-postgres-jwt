@@ -6,9 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(incomingRoutes *gin.Engine, db *postgres.Storage) {
+func InitRoutesWithStorage(routerGroup *gin.RouterGroup, db *postgres.Storage) {
 	userHandler := handlers.New(db)
 
-	incomingRoutes.POST("api-v1/refresh", userHandler.RefreshTokensByID())
-	incomingRoutes.POST("api-v1/tokens", userHandler.GetTokensByID())
+	routerGroup.POST("api-v1/refresh", userHandler.RefreshTokensByID())
+	routerGroup.POST("api-v1/tokens", userHandler.GetTokensByID())
 }

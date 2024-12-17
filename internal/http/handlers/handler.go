@@ -7,6 +7,7 @@ import (
 	"github.com/HironixRotifer/test-case-postgres-jwt/internal/lib/jwt"
 	"github.com/HironixRotifer/test-case-postgres-jwt/internal/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	log "github.com/rs/zerolog/log"
 )
 
@@ -16,7 +17,8 @@ var (
 )
 
 type UserHandler struct {
-	up UserProvider
+	up        UserProvider
+	validator *validator.Validate
 }
 
 type UserProvider interface {
@@ -26,25 +28,28 @@ type UserProvider interface {
 
 func New(userProvider UserProvider) *UserHandler {
 	return &UserHandler{
-		up: userProvider,
+		up:        userProvider,
+		validator: validator.New(),
 	}
 }
 
 func (u *UserHandler) GetTokensByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		type Request struct {
-			GUID int `json:"guid" binding:"required"`
-		}
 
 		var req Request
 
-		if err := c.ShouldBindJSON(&req); err != nil {
-			log.Err(err).Msg("error binding json")
-
+		if err := c.BindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": ErrorGetTokens,
+				"error": "bad request",
 			})
+			return
+		}
 
+		validationErr := u.validator.Struct(req)
+		if validationErr != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "bad request",
+			})
 			return
 		}
 
@@ -91,20 +96,21 @@ func (u *UserHandler) GetTokensByID() gin.HandlerFunc {
 
 func (u *UserHandler) RefreshTokensByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		type Request struct {
-			AccessToken  string `json:"token" binding:"required"`
-			RefreshToken string `json:"refresh_token" binding:"required"`
+
+		var req tokenRequest
+
+		if err := c.BindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "bad request",
+			})
+			return
 		}
 
-		var req Request
-
-		if err := c.ShouldBindJSON(&req); err != nil {
-			log.Err(err).Msg("error binding json")
-
+		validationErr := u.validator.Struct(req)
+		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": ErrorRefresh,
+				"error": "bad request",
 			})
-
 			return
 		}
 
