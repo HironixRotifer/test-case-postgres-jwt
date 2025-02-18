@@ -7,8 +7,7 @@
 - HTTP 
 
     ```
-    /api-v1/swagger/ - сваггер :)<br>
- 
+    /api-v1/swagger/ - сваггер :)
     ```
 
 ## Запуск
