@@ -21,7 +21,7 @@ func GenerateJWTokens(uid int) (accessToken string, refreshToken string, err err
 
 	claims := &AandaClaims{
 		Uid: uid,
-		Jti: generator.GenIntKeyUUID(),
+		Jti: generator.Jti(),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(1)).Unix(),
 		},
