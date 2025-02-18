@@ -1,0 +1,129 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/v1/auth": {
+            "post": {
+                "security": [
+                    {
+                        "Api-Token": []
+                    }
+                ],
+                "description": "Авторизация",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Авторизация",
+                "parameters": [
+                    {
+                        "description": "Модель авторизации",
+                        "name": "authQuery",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Credentials"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Ошибки валидации входных параметров"
+                    },
+                    "500": {
+                        "description": "Неизвестная внутренняя ошибка"
+                    }
+                }
+            }
+        },
+        "/api/v1/refresh": {
+            "post": {
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
+                "description": "Обновление токенов",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Обновление токенов",
+                "parameters": [
+                    {
+                        "description": "Модель токенов",
+                        "name": "authQuery",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.JwtCustom"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.JwtCustom"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибки валидации входных параметров"
+                    },
+                    "500": {
+                        "description": "Неизвестная внутренняя ошибка"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "request.Credentials": {
+            "description": "Описание модели 'Credentials'",
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.JwtCustom": {
+            "description": "Описание модели 'JwtCustom'",
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.JwtCustom": {
+            "description": "Описание модели 'JwtCustom'",
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "description": "Access token",
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "description": "Refresh token",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

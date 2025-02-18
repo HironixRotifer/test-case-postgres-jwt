@@ -1,0 +1,81 @@
+definitions:
+  request.Credentials:
+    description: Описание модели 'Credentials'
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  request.JwtCustom:
+    description: Описание модели 'JwtCustom'
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  response.JwtCustom:
+    description: Описание модели 'JwtCustom'
+    properties:
+      access_token:
+        description: Access token
+        type: string
+      refresh_token:
+        description: Refresh token
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/auth:
+    post:
+      description: Авторизация
+      parameters:
+      - description: Модель авторизации
+        in: body
+        name: authQuery
+        required: true
+        schema:
+          $ref: '#/definitions/request.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Ошибки валидации входных параметров
+        "500":
+          description: Неизвестная внутренняя ошибка
+      security:
+      - Api-Token: []
+      summary: Авторизация
+      tags:
+      - Auth
+  /api/v1/refresh:
+    post:
+      description: Обновление токенов
+      parameters:
+      - description: Модель токенов
+        in: body
+        name: authQuery
+        required: true
+        schema:
+          $ref: '#/definitions/request.JwtCustom'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JwtCustom'
+        "400":
+          description: Ошибки валидации входных параметров
+        "500":
+          description: Неизвестная внутренняя ошибка
+      security:
+      - jwt: []
+      summary: Обновление токенов
+      tags:
+      - Auth
+swagger: "2.0"

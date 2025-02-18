@@ -7,6 +7,8 @@ echo "Запуск контейнера: $CONTAINER_NAME"
 
 docker-compose up -d --build db
 docker-compose up -d --build migrator
+docker-compose up -d --build redis
+
 
 # sleep 5
 sh wait-for-postgres.sh
