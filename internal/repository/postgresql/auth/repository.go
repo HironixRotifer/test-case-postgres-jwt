@@ -42,37 +42,10 @@ func (r *repository) getUserByID(ctx context.Context, uid int) (models.User, err
 	}
 
 	row := stmt.QueryRowContext(ctx, uid)
-	err = row.Scan(&u.UID, &u.Email, &u.Login, &u.Password)
+	err = row.Scan(&u.UID, &u.Email, &u.Login, &u.Password, &u.Salt)
 	if err != nil {
 		return u, err
 	}
 
 	return u, nil
-}
-
-// UpdateUserByID обновляет пользователя по его UID
-func (r *repository) UpdateUserByID(id int, user models.User) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
-	defer cancel()
-
-	err := r.updateUserByID(ctx, id, user)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r *repository) updateUserByID(ctx context.Context, uid int, user models.User) error {
-	stmt, err := r.dbDriver.Prepare("UPDATE users SET refresh_token = $1 WHERE uid = $2")
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.ExecContext(ctx, uid)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

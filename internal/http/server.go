@@ -17,6 +17,12 @@ const (
 	shutDownTimeout = 10 * time.Second
 )
 
+// @title Новый авторизации
+// @version 1.0.0
+// @description	Методы API сервиса авторизации
+// @BasePath /
+// @in header
+// @name Authorization
 type ServerHTTP struct {
 	server   http.Server
 	provider *provider.Provider
@@ -88,14 +94,14 @@ func (h *ServerHTTP) initProvider(_ context.Context) error {
 		return err
 	}
 
-	provider.NewProvider(postgresDriver)
+	h.provider = provider.NewProvider(postgresDriver)
 
 	return nil
 }
 
 func (h *ServerHTTP) initServerHTTP(ctx context.Context) error {
 	h.server = http.Server{
-		Addr: h.config.Host,
+		Addr: net.JoinHostPort(h.config.Host, h.config.Port),
 		BaseContext: func(listener net.Listener) context.Context {
 			return ctx
 		},

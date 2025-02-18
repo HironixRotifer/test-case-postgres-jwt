@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	authHandler "github.com/HironixRotifer/test-case-postgres-jwt/internal/http/handlers/auth"
+	handlerPing "github.com/HironixRotifer/test-case-postgres-jwt/internal/http/handlers/ping"
 	handlerSwagger "github.com/HironixRotifer/test-case-postgres-jwt/internal/http/handlers/swagger"
 
 	"github.com/gorilla/mux"
@@ -18,6 +19,7 @@ func (s *ServerHTTP) initRoutes() *mux.Router {
 
 	// swagger
 	router.PathPrefix("/swagger/").Handler(handlerSwagger.Swagger()).Methods(http.MethodGet)
+	router.HandleFunc("/ping", handlerPing.Ping()).Methods(http.MethodGet)
 
 	return router
 }

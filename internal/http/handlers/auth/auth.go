@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,6 +26,8 @@ import (
 func Auth(jwtCustomService service.JWTCustomService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		fmt.Println("LOG")
 
 		cr := &request.Credentials{}
 		err := json.NewDecoder(r.Body).Decode(cr)

@@ -8,7 +8,7 @@ import (
 
 type Config struct {
 	Host     string `env:"HOST"`
-	Port     int    `env:"PORT"` // Порт http сервера
+	Port     string `env:"PORT"` // Порт http сервера
 	DBHost   string `env:"DB_HOST"`
 	DBPort   string `env:"DB_PORT"` // Порт базы данных
 	Password string `env:"DB_PASSWORD"`
